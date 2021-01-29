@@ -1,0 +1,97 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: best2pay-woocommerce 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-15 04:38+0300\n"
+"PO-Revision-Date: 2015-12-15 04:41+0300\n"
+"Last-Translator: Dennis Prochko <wolfsoft@mail.ru>\n"
+"Language-Team: ru_RU <RU@li.org>\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: ../best2pay-woocommerce.php:36
+msgid "Best2Pay For WooCommerce (Visa/MasterCard)"
+msgstr "Best2Pay для WooCommerce (Виза/Мастеркард)"
+
+#: ../best2pay-woocommerce.php:37
+msgid ""
+"Receive payments via Visa/Mastercard easily with Best2Pay bank cards "
+"processing"
+msgstr ""
+"Принимайте платежи по банковским картам Visa/Mastercard легко и просто с "
+"помощью системы Best2Pay"
+
+#: ../best2pay-woocommerce.php:38
+msgid "Dennis Prochko"
+msgstr "Прочко Денис"
+
+#: ../best2pay-woocommerce.php:52 ../best2pay-woocommerce.php:53
+msgid "Best2Pay"
+msgstr "Best2Pay"
+
+#: ../best2pay-woocommerce.php:54
+msgid ""
+"Payments with bank cards via the <a href=\"http://www.best2pay.net\" target="
+"\"_blank\">Best2Pay</a> payment system."
+msgstr ""
+"Платежи по банковским картам (Visa, Mastercard) через платёжную систему <a "
+"href=\"http://www.best2pay.net\" target=\"_blank\">Best2Pay</a>."
+
+#: ../best2pay-woocommerce.php:99
+msgid "Enable/Disable"
+msgstr "Включить/Выключить"
+
+#: ../best2pay-woocommerce.php:101
+msgid "Enable Best2Pay checkout method"
+msgstr "Включить использование метода платежа Best2Pay"
+
+#: ../best2pay-woocommerce.php:106
+msgid "Sector ID"
+msgstr "Sector ID"
+
+#: ../best2pay-woocommerce.php:108
+msgid "Your shop identifier at Best2Pay"
+msgstr "Идентификатор вашего магазина в системе Best2Pay"
+
+#: ../best2pay-woocommerce.php:113
+msgid "Password"
+msgstr "Пароль"
+
+#: ../best2pay-woocommerce.php:115
+msgid "Password to use for digital signature"
+msgstr "Пароль для цифровой подписи"
+
+#: ../best2pay-woocommerce.php:120
+msgid "Test Mode"
+msgstr "Тестовый режим"
+
+#: ../best2pay-woocommerce.php:126
+msgid "Select test or live mode"
+msgstr "Выберите тестовый или рабочий режим"
+
+#: ../best2pay-woocommerce.php:163
+#, php-format
+msgid "Order #%s"
+msgstr "Заказ #%s"
+
+#: ../best2pay-woocommerce.php:201 ../best2pay-woocommerce.php:203
+msgid "The order wasn't paid."
+msgstr "Заказ не был оплачен."
+
+#: ../best2pay-woocommerce.php:258 ../best2pay-woocommerce.php:260
+#: ../best2pay-woocommerce.php:284
+msgid "The order wasn't paid: "
+msgstr "Заказ не был оплачен: "
+
+#: ../best2pay-woocommerce.php:317
+msgid "Payment completed."
+msgstr "Платеж завершен."
