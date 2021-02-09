@@ -181,6 +181,8 @@ function init_woocommerce_best2pay() {
                     $fiscalPositions.= ($item_data['total_tax']) ?: 6 .';';   // tax
                     $fiscalPositions.=$item_data['name'].'|';
                 }
+                $fiscalPositions .= ($wc_order->discount_total) ? ('1;' . $wc_order->discount_total * -100 . ';6;Скидка|') : ''; 
+                $fiscalPositions .= ($wc_order->shipping_total) ? ('1;' . $wc_order->shipping_total * 100 . ';6;Доставка|') : ''; 
                 $fiscalPositions = substr($fiscalPositions, 0, -1);
             }
 
