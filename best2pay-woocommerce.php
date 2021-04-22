@@ -1,6 +1,5 @@
 <?php
-/*  Copyright (c) 2015  Dennis Prochko <wolfsoft@mail.ru>
-
+/*  
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 2, as 
 	published by the Free Software Foundation.
@@ -19,10 +18,9 @@
  * Plugin URI: http://best2pay.net/
  * Description: Receive payments via Visa/Mastercard easily with Best2Pay bank cards processing
  * Version: 1.2
- * Author: Dennis Prochko
- * Author URI: mailto:wolfsoft@mail.ru
- * Requires at least: 3.5
- * Tested up to: 4.5
+ * Author: Best2Pay
+ * Author URI: http://best2pay.net/
+ * Tested up to: 5.7.1
  * License: GPL3
  *
  * Text Domain: best2pay_woocommerce
@@ -169,9 +167,10 @@ function init_woocommerce_best2pay() {
             $wc_order = wc_get_order( $order_id );
             $items = $wc_order->get_items();
             $fiscalPositions='';
+            $fiscalAmount = 0;
             // $KKT = $this->config->get('payment_best2pay_kkt');
-            //TODO
-            if (true){
+            $KKT = true;
+            if ($KKT){
                 foreach ( $items as $item_id => $item ) {
                     $item_data = $item->get_data();
                     $fiscalPositions.=$item_data['quantity'].';';
@@ -179,10 +178,15 @@ function init_woocommerce_best2pay() {
                     $elementPrice = $elementPrice * 100;
                     $fiscalPositions.=$elementPrice.';';
                     $fiscalPositions.= ($item_data['total_tax']) ?: 6 .';';   // tax
-                    $fiscalPositions.=$item_data['name'].'|';
+                    $fiscalPositions.= str_ireplace([';', '|'], '', $item_data['name']).'|';
+
+                    $fiscalAmount += $item_data['quantity'] * $elementPrice;
                 }
-                $fiscalPositions .= ($wc_order->discount_total) ? ('1;' . $wc_order->discount_total * -100 . ';6;Скидка|') : ''; 
                 $fiscalPositions .= ($wc_order->shipping_total) ? ('1;' . $wc_order->shipping_total * 100 . ';6;Доставка|') : ''; 
+                $fiscalDiff = abs($fiscalAmount - intval($order->get_total() * 100));
+                if ($fiscalDiff) {
+                	$fiscalPositions .= '1;' . $fiscalDiff . ';6;Скидка;14|'; 
+                }
                 $fiscalPositions = substr($fiscalPositions, 0, -1);
             }
 
