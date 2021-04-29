@@ -226,7 +226,9 @@ function init_woocommerce_best2pay() {
                 'signature' => $signature
             )
             );
-			$b2p_order_id = (isset(wp_remote_post($best2pay_url . '/webapi/Register', $args)['body']) && wp_remote_post($best2pay_url . '/webapi/Register', $args)['body']) ? wp_remote_post($best2pay_url . '/webapi/Register', $args)['body'] : null;
+            $remote_post = wp_remote_post($best2pay_url . '/webapi/Register', $args);
+            $remote_post = (isset($remote_post['body'])) ? $remote_post['body'] : $remote_post;
+			$b2p_order_id = ($remote_post) ? $remote_post : null;
 
 			// $fd = fopen("b2p_log.txt", 'w') or die("не удалось создать файл");
 			// fwrite($fd, print_r($args, true) . print_r($b2p_order_id, true));
@@ -298,12 +300,14 @@ function init_woocommerce_best2pay() {
 
 //				$xml = file_get_contents($best2pay_url . '/webapi/Operation', false, $context);
                 $args = array(
+                	'body' => array(
                     'sector' => $this->sector,
                     'id' => $b2p_order_id,
                     'operation' => $b2p_operation_id,
                     'signature' => $signature
+                )
                 );
-                $xml = wp_remote_post($best2pay_url . '/webapi/Operation', $args);
+                $xml = wp_remote_post($best2pay_url . '/webapi/Operation', $args)['body'];
 
 				if (!$xml)
 					break;
@@ -313,7 +317,6 @@ function init_woocommerce_best2pay() {
 				$response = json_decode(json_encode($xml));
 				if (!$response)
 					break;
-
 				if (!$this->orderAsPayed($response))
 					continue;
 
@@ -324,9 +327,9 @@ function init_woocommerce_best2pay() {
 			$order_id = intval($response->reference);
 			$order = wc_get_order($order_id);
 			if ($order)
-				$order->cancel_order(__( "The order wasn't paid: " . $response->message . '.', 'best2pay-payment_method' ));
+				$order->cancel_order(__( "The order wasn't paid [1]: " . $response->message . '.', 'best2pay-payment_method' ));
 
-			wc_add_notice( __( "The order wasn't paid: ", 'best2pay-payment_method' ) . $response->message . '.', 'error' );
+			wc_add_notice( __( "The order wasn't paid [1]: ", 'best2pay-payment_method' ) . $response->message . '.', 'error' );
 			$get_checkout_url = apply_filters( 'woocommerce_get_checkout_url', WC()->cart->get_checkout_url() );
 			wp_redirect( $get_checkout_url ); exit();
 
@@ -357,7 +360,7 @@ function init_woocommerce_best2pay() {
 				$order_id = intval($response->reference);
 				$order = wc_get_order($order_id);
 				if ($order)
-					$order->cancel_order(__( "The order wasn't paid: ", 'best2pay-payment_method' ) . $response->message . '.');
+					$order->cancel_order(__( "The order wasn't paid [2]: ", 'best2pay-payment_method' ) . $response->message . '.');
 				exit();
 			}
 
@@ -382,9 +385,10 @@ function init_woocommerce_best2pay() {
 			// check server signature
 			$tmp_response = json_decode(json_encode($response), true);
 			unset($tmp_response["signature"]);
-			unset($tmp_response["protocol_message"]);
+			unset($tmp_response["ofd_state"]);
 
 			$signature = base64_encode(md5(implode('', $tmp_response) . $this->password));
+
 			if ($signature !== $response->signature) {
 				$order->update_status('fail', $response->message);
 				return false;
@@ -392,6 +396,8 @@ function init_woocommerce_best2pay() {
 
 			$order->add_order_note( __('Payment completed.', 'best2pay-payment_method') );
 			$order->payment_complete();
+			
+			// echo '<pre>' . print_r($tmp_response, true) . '<br>' . $signature . '<br>' . print_r($response, true); die();
 
 			/*
 			 * сохраним в мета заказа выбранный на момент оплаты режим (1 или 2 стадии)
