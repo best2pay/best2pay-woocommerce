@@ -167,15 +167,14 @@ function init_woocommerce_best2pay()
             if ($this->twostepsmode == "1")
                 $best2pay_operation = "Authorize";
 
-
             $signature = base64_encode(md5($this->sector . intval($order->get_total() * 100) . $currency . $this->password));
 
             $wc_order = wc_get_order($order_id);
             $items = $wc_order->get_items();
             $fiscalPositions = '';
             $fiscalAmount = 0;
-            // $KKT = $this->config->get('payment_best2pay_kkt');
             $KKT = true;
+
             if ($KKT) {
                 foreach ($items as $item_id => $item) {
                     $item_data = $item->get_data();
@@ -199,27 +198,6 @@ function init_woocommerce_best2pay()
                 $fiscalPositions = substr($fiscalPositions, 0, -1);
             }
 
-            /*$context  = stream_context_create(array(
-                'http' => array(
-                    'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-                    'method'  => 'POST',
-                    'content' => http_build_query(array(
-                        'sector' => $this->sector,
-                        'reference' => $order->get_id(),
-                        'amount' => intval($order->get_total() * 100),
-                        'fiscal_positions' => $fiscalPositions,
-                        'description' => sprintf( __('Order #%s' , 'best2pay-payment_method'), ltrim( $order->get_order_number(), '#' ) ),
-                        'email' => $order->get_billing_email(),
-                        'currency' => $currency,
-                        'mode' => 1,
-                        'url' => $this->callback_url,
-                        'signature' => $signature
-                    )),
-                )
-            ));
-
-            $b2p_order_id = file_get_contents($best2pay_url . '/webapi/Register', false, $context);*/
-
             $args = array(
                 'body' => array(
                     'sector' => $this->sector,
@@ -237,10 +215,6 @@ function init_woocommerce_best2pay()
             $remote_post = wp_remote_post($best2pay_url . '/webapi/Register', $args);
             $remote_post = (isset($remote_post['body'])) ? $remote_post['body'] : $remote_post;
             $b2p_order_id = ($remote_post) ? $remote_post : null;
-
-            // $fd = fopen("b2p_log.txt", 'w') or die("не удалось создать файл");
-            // fwrite($fd, print_r($args, true) . print_r($b2p_order_id, true));
-            // fclose($fd);
 
             if (intval($b2p_order_id) == 0) {
                 return false;
@@ -307,8 +281,6 @@ function init_woocommerce_best2pay()
 
                 // pause because of possible background processing in the Best2Pay
                 sleep(2);
-
-//				$xml = file_get_contents($best2pay_url . '/webapi/Operation', false, $context);
                 $args = array(
                     'body' => array(
                         'sector' => $this->sector,
